@@ -1,11 +1,11 @@
 import { getLocalStorage, setLocalStorage } from "./utils.mjs";
 
-function productDetailsTemplate(product){
-    return `<h3>${product.Brand.Name}</h3>
+function productDetailsTemplate(product) {
+  return `<h3>${product.Brand.Name}</h3>
     <h2 class="divider">${product.NameWithoutBrand}</h2>
     <img
         class="divider"
-        src="${product.Image}"
+        src="${product.Images.PrimaryLarge}"
         alt="${product.NameWithoutBrand}"
         />
         <p class="product-card__price">$${product.FinalPrice}</p>
@@ -17,31 +17,30 @@ function productDetailsTemplate(product){
 }
 
 export default class ProductDetails {
-    constructor(productId, dataSource) {
-        this.productId = productId;
-        this.product = {};
-        this.dataSource = dataSource;
-    }
+  constructor(productId, dataSource) {
+    this.productId = productId;
+    this.product = {};
+    this.dataSource = dataSource;
+  }
 
-    async init(){
-        this.product = await this.dataSource.findProductById(this.productId);
+  async init() {
+    this.product = await this.dataSource.findProductById(this.productId);
 
-        this.renderProductDetails();
+    this.renderProductDetails();
 
-        document
-            .getElementById("addToCart")
-            .addEventListener("click", this.addProductToCart.bind(this));
-    }
+    document
+      .getElementById("addToCart")
+      .addEventListener("click", this.addProductToCart.bind(this));
+  }
 
-    addProductToCart(){
-        const cartItems = getLocalStorage("so-cart") || [];
-        cartItems.push(this.product);
-        setLocalStorage("so-cart", cartItems);
-    }
+  addProductToCart() {
+    const cartItems = getLocalStorage("so-cart") || [];
+    cartItems.push(this.product);
+    setLocalStorage("so-cart", cartItems);
+  }
 
-    renderProductDetails(){
-        document.querySelector(".product-detail").innerHTML = 
-        productDetailsTemplate(this.product);
-    }
+  renderProductDetails() {
+    document.querySelector(".product-detail").innerHTML =
+      productDetailsTemplate(this.product);
+  }
 }
-
