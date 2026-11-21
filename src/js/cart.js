@@ -4,16 +4,27 @@ import { loadHeaderFooter } from "./utils.mjs";
 loadHeaderFooter();
 
 function renderCartContents() {
-  const cartItems = getLocalStorage("so-cart");
+  const cartItems = getLocalStorage("so-cart") || [];
   const htmlItems = cartItems.map((item) => cartItemTemplate(item));
   document.querySelector(".product-list").innerHTML = htmlItems.join("");
+
+  if (cartItems.length > 0) {
+    const total = cartItems.reduce(
+      (sum, item) => sum + Number(item.FinalPrice),
+      0,
+    );
+    const footer = document.querySelector(".cart-footer");
+    footer.classList.remove("hide");
+    footer.querySelector(".cart-total").textContent =
+      `Total: $${total.toFixed(2)}`;
+  }
 }
 
 function cartItemTemplate(item) {
   const newItem = `<li class="cart-card divider">
   <a href="#" class="cart-card__image">
     <img
-      src="${item.Image}"
+      src="${item.Images.PrimaryMedium}"
       alt="${item.Name}"
     />
   </a>
